@@ -34,9 +34,12 @@ pipeline {
 
         stage('Déployer en Production') {
             when {
-                input {
-                    message "Voulez-vous déployer en production ?"
-                    ok "Déployer"
+                script {
+                    def userInput = input(
+                        message: 'Voulez-vous déployer en production ?',
+                        ok: 'Déployer',
+                        parameters: []
+                    )
                 }
             }
             steps {
