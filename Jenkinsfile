@@ -28,20 +28,22 @@ pipeline {
         stage('Tests') {
             steps {
                 sh 'sleep 5' // Attendre que le conteneur démarre
-                sh 'curl http://localhost:8085'
+                sh 'curl http://localhost:3001' // Vérifie la bonne réponse de l'application en test
+            }
+        }
+
+        stage('Validation Déploiement Production') {
+            steps {
+                script {
+                    input(
+                        message: 'Voulez-vous déployer en production ?',
+                        ok: 'Déployer'
+                    )
+                }
             }
         }
 
         stage('Déployer en Production') {
-            when {
-                script {
-                    def userInput = input(
-                        message: 'Voulez-vous déployer en production ?',
-                        ok: 'Déployer',
-                        parameters: []
-                    )
-                }
-            }
             steps {
                 script {
                     sh 'docker rm -f myapp-prod || true'
@@ -54,7 +56,13 @@ pipeline {
     post {
         always {
             script {
+                // Nettoyer le conteneur de test même en cas d'échec
                 sh 'docker rm -f myapp-test || true'
+            }
+        }
+    }
+}
+
             }
         }
     }
