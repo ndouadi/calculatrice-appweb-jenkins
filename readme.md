@@ -1,0 +1,1 @@
+Application web qui permet d'effectuer des calculs mathématiques simples (addition, soustraction, multiplication, division) avec une interface utilisateur conviviale.
